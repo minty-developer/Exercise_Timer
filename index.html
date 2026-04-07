@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>운동용 타이머</title>
+</head>
+    <body>
+        <div class="loading" id="loading">
+            <div class="load_per" id="load_per">로딩중</div>
+        </div>
+        <header>
+            <h1 class="title">운동 타이머</h1>
+            <button class="settings" id="settings" onclick="OpenSettings()"><h2>≡</h2></button>
+        </header>
+        
+        <aside class="settingsMenu" id="settingsMenu">
+            <button class="close" id="close" onclick="CloseSettings()">X</button>
+            <h2>설정</h2>
+            <div class="work">
+                <p>운동 시간:   </p>
+                <input type="number" class="time" id="workMin" value="0">
+                <p>분</p>
+                <input type="number" class="time" id="workSec" value="30">
+                <p>초</p>
+            </div>
+            <div class="rest">
+                <p>휴식 시간:   </p>
+                <input type="number" class="time" id="restMin" value="0">
+                <p>분</p>
+                <input type="number" class="time" id="restSec" value="10">
+                <p>초</p>
+            </div>
+            <div class="sets">
+                <label for="sets">세트 수:</label>
+                <input type="number" id="sets" value="3">
+                <label for="UnLimitRoop">무한 반복 하기</label>
+                <input type="checkbox" id="UnLimitRoop" onclick="AlertULR()">
+            </div>
+            <div class="alert_sounds">
+                <div class="start_box">
+                    <label for="start">시작할 때 알림: (끄기)</label>
+                    <input type="range" id="startSound" min="0" max="1" value="1">
+                    <p>(켜기)</p>
+                </div>
+                <div class="ready_box">
+                    <p>휴식 시간 절반일 때 알림:</p><label>(끄기)
+                    <input type="range" id="readySound" min="0" max="1" value="1">
+                    (켜기)</label>
+                </div>
+            </div>
+            <button class="save_button" id="save_button" onclick="SaveSettings()">저장</button>
+        </aside>
+
+        <main>
+            <div class="condition">
+                <h2 id="condition">로딩 중...</h2>
+            </div>
+            <div class="timer">
+                <h2 id="minute">00</h2>
+                <h2>:</h2>
+                <h2 id="second">00</h2>
+            </div>
+            <div class="buttons">
+                <button class="start" id="start" onclick="StartTimer()">시작</button>
+                <button class="stop" id="stop" onclick="StopTimer()">정지</button>
+                <button class="reset" id="reset" onclick="ResetTimer()">초기화</button>
+            </div>
+        </main>
+        <script src="./load.js"></script>
+        <script src="./util.js"></script>
+        <script src="./script.js"></script>
+    </body>
+</html>

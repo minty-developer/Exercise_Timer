@@ -1,0 +1,207 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+body {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+}
+
+.title {
+    font-size: 48px;
+    font-weight: bold;
+    position: fixed;
+    left: 20px;
+    top: 20px;
+}
+
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 98vw;
+    height: 98vh;
+
+    background-color: rgba(255, 255, 255, 0.95);
+
+    z-index: 9999;
+}
+
+.load_per {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+}
+
+header {
+    display: inline-flex;
+    align-items: center;
+    width: 98vw;
+    height: 98px;
+    position: fixed;
+    top: 0;
+}
+
+main {
+    position: absolute;
+    top: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 98vw;
+    height: calc(90vh - 100px);
+    gap: 20px;
+}
+
+.timer {
+    display: inline-flex;
+    align-items: center;
+}
+
+aside {
+    width: 90vw;
+    height: 98vh;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: #f0f0f0;
+    padding: 20px;
+    /* 🔥 추가 */
+    transform: translateX(100%);   /* 화면 밖으로 */
+    transition: transform 0.3s ease;
+    z-index: 999;
+}
+
+/* 열렸을 때 */
+aside.open {
+    transform: translateX(0);
+}
+
+.settingsMenu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+.close, .settings {
+    position: fixed;
+    top: 20px;
+    right: 30px;
+    width: 46px;
+    height: 46px;
+    cursor: pointer;
+    border: none;
+    background: green;
+    color: white;
+    border-radius: 5px;
+    font-size: 32px;
+}
+
+.close {
+    display: none;
+}
+
+.buttons button {
+    width: 120px;
+    height: 40px;
+    border: none;
+    background: yellowgreen;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.buttons button:hover {
+    background: green;
+}
+
+.save_button {
+    width: 80px;
+    height: 30px;
+    border: none;
+    background: blue;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.work {
+    display: inline-flex;
+}
+
+.rest {
+    display: inline-flex;
+}
+
+.time {
+    width: 100px;
+}
+
+.alert_sounds {
+    display: flex;
+    flex-direction: column;
+}
+
+.start_box {
+    display: inline-flex;
+}
+
+.ready_box {
+    display: inline-flex;
+}
+
+@media screen and (max-width:766px) {
+    .title {
+        font-size: 32px;
+    }
+
+    .settings {
+        width: 36px;
+        height: 36px;
+        font-size: 24px;
+    }
+
+    aside {
+        width: 100vw;
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .buttons button {
+        font-size: 20px;
+        width: 100vw;
+        max-width: 200px;
+        height: 50px;
+    }
+    .buttons button:hover {
+        background: yellowgreen;
+    }
+    
+    main {
+        min-height: calc(100vh - 100px);
+    }
+
+    .ready_box {
+        display:flex;
+        flex-direction: column;
+    }
+}
+
+@media screen and (min-width:1024px) {
+    .loading {
+        width: 100vw;
+    }
+}
