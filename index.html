@@ -44,15 +44,18 @@
         </div>
 
         <div class="alert_sounds">
+            <div class="start_ready_box">
+                <label>시작 전 알림: <input type="number" id="start_readySec">초 전 알림</label>
+            </div>
+
             <div class="start_box">
-                <label>시작할 때 알림:</label>
-                <input type="range" id="startSound" min="0" max="1">
+                <label>시작할 때 알림: <input type="range" id="startSound" min="0" max="1"></label>
             </div>
 
             <div class="ready_box">
                 <p>휴식 종료 전 알림:</p>
+                <label>알림 켜기: <input type="range" id="readySound" min="0" max="1"></label>
                 <label><input type="number" id="readySec">초 전 알림</label>
-                <input type="range" id="readySound" min="0" max="1">
             </div>
         </div>
 

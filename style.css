@@ -149,6 +149,7 @@ aside.open {
 .alert_sounds {
     display: flex;
     flex-direction: column;
+    gap: 10px;
 }
 
 .start_box {
@@ -156,7 +157,8 @@ aside.open {
 }
 
 .ready_box {
-    display: inline-flex;
+    display: flex;
+    flex-direction: column;
 }
 
 @media screen and (max-width:766px) {
@@ -172,6 +174,7 @@ aside.open {
 
     aside {
         width: 100vw;
+        gap: 30px;
     }
 
     .buttons {

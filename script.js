@@ -20,6 +20,9 @@ let currentSet = 1;
 let workTime = 30;
 let restTime = 10;
 
+let readySec = 3;
+let startReadySec = 3;
+
 // =========================
 // 🔊 알림음
 // =========================
@@ -102,11 +105,14 @@ function LoadSettings() {
     const restSec = parseInt(document.getElementById("restSec").value) || 0;
 
     isUnLimit = document.getElementById("UnLimitRoop").checked ? 1 : 0;
-
     totalSets = parseInt(document.getElementById("sets").value) || 1;
 
     startSoundOn = document.getElementById("startSound").value == "1";
     readySoundOn = document.getElementById("readySound").value == "1";
+
+    // 🔥 추가
+    readySec = parseInt(document.getElementById("readySec").value) || 0;
+    startReadySec = parseInt(document.getElementById("start_readySec").value) || 0;
 
     workTime = workMin * 60 + workSec;
     restTime = restMin * 60 + restSec;
@@ -131,29 +137,20 @@ function CloseSettings() {
 }
 
 // =========================
-// 타이머 시작
+// 타이머 작동
 // =========================
-function StartTimer() {
-    if (isRunning) return;
 
-    isStart = true;
-
-    if (currentTime === 0) {
-        LoadSettings();
-        currentTime = isWorkTime ? workTime : restTime;
-    }
-
+function runTimer() {
     isRunning = true;
-
-    if (startSoundOn) PlaySound();
+    isStart = true;
 
     timer = setInterval(() => {
         currentTime--;
 
+        // 🔥 휴식 종료 n초 전 알림
         if (!isWorkTime && readySoundOn) {
-            if (!halfAlertPlayed && currentTime === Math.floor(restTime / 2)) {
+            if (currentTime === readySec) {
                 PlaySound();
-                halfAlertPlayed = true;
             }
         }
 
@@ -175,7 +172,7 @@ function StartTimer() {
                     isWorkTime = true;
                     isPause = false;
                     isStart = false;
-                    currentSet = 1; // 🔥 수정
+                    currentSet = 1;
 
                     if (startSoundOn) PlaySound();
                     Init();
@@ -191,18 +188,53 @@ function StartTimer() {
 
         const conditionEl = document.getElementById("condition");
 
-        if (isUnLimit) {
-            conditionEl.textContent =
-                (isWorkTime ? "운동 시간" : "휴식 시간");
-        } else {
-            conditionEl.textContent =
-                (isWorkTime ? "운동 시간" : "휴식 시간") +
-                ` (${currentSet}/${totalSets})`;
-        }
+        conditionEl.textContent = isUnLimit
+            ? (isWorkTime ? "운동 시간" : "휴식 시간")
+            : `${isWorkTime ? "운동 시간" : "휴식 시간"} (${currentSet}/${totalSets})`;
 
         UpdateDisplay();
 
     }, 1000);
+}
+
+// =========================
+// 타이머 시작
+// =========================
+function StartTimer() {
+    if (isRunning) return;
+
+    LoadSettings();
+
+    if (currentTime === 0) {
+        isWorkTime = true;
+        currentSet = 1;
+        currentTime = workTime; // 🔥 핵심
+    }
+
+    // 시작 전 대기
+    if (startReadySec > 0 && currentTime === workTime) {
+        let countdown = startReadySec;
+
+        document.getElementById("condition").textContent = "준비";
+
+        const readyInterval = setInterval(() => {
+            document.getElementById("minute").textContent = "00";
+            document.getElementById("second").textContent = String(countdown).padStart(2, '0');
+
+            if (startSoundOn) PlaySound();
+
+            countdown--;
+
+            if (countdown < 0) {
+                clearInterval(readyInterval);
+                runTimer();
+            }
+        }, 1000);
+
+        return;
+    }
+
+    runTimer();
 }
 
 // =========================
@@ -272,6 +304,7 @@ function SaveSettings() {
     localStorage.setItem("startSound", document.getElementById("startSound").value);
     localStorage.setItem("readySound", document.getElementById("readySound").value);
     localStorage.setItem("readySec", document.getElementById("readySec").value);
+    localStorage.setItem("start_readySec", document.getElementById("start_readySec").value);
 
     alert("설정이 저장되었습니다.");
 
@@ -314,7 +347,8 @@ function Init() {
     document.getElementById("startSound").value = localStorage.getItem("startSound");
     document.getElementById("readySound").value = localStorage.getItem("readySound");
     document.getElementById("readySec").value = localStorage.getItem("readySec");
-
+    document.getElementById("readySec").value = localStorage.getItem("readySec");
+    document.getElementById("start_readySec").value = localStorage.getItem("start_readySec");
     document.getElementById("UnLimitRoop").checked = !!Unlimit;
     document.getElementById("sets").disabled = !!Unlimit;
 }
