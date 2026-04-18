@@ -6,93 +6,74 @@
     <link rel="stylesheet" href="./style.css">
     <title>운동용 타이머</title>
 </head>
-    <body>
-        <div class="loading" id="loading">
-            <div class="load_per" id="load_per">로딩중</div>
-        </div>
-        <header>
-            <h1 class="title">운동 타이머</h1>
-            <button class="settings" id="settings" onclick="OpenSettings()"><h2>≡</h2></button>
-        </header>
-        
-        <aside class="settingsMenu" id="settingsMenu">
-            <button class="close" id="close" onclick="CloseSettings()">X</button>
-            <h2>설정</h2>
-            <div class="work">
-                <p>운동 시간:   </p>
-                <input type="number" class="time" id="workMin" value="0">
-                <p>분</p>
-                <input type="number" class="time" id="workSec" value="30">
-                <p>초</p>
-            </div>
-            <div class="rest">
-                <p>휴식 시간:   </p>
-                <input type="number" class="time" id="restMin" value="0">
-                <p>분</p>
-                <input type="number" class="time" id="restSec" value="10">
-                <p>초</p>
-            </div>
-            <div class="sets">
-                <label for="sets">세트 수:</label>
-                <input type="number" id="sets" value="3">
-                <label for="UnLimitRoop">무한 반복 하기</label>
-                <input type="checkbox" id="UnLimitRoop" onclick="AlertULR()">
-            </div>
-            <div class="alert_sounds">
-                <div class="start_box">
-                    <label for="start">시작할 때 알림: (끄기)</label>
-                    <input type="range" id="startSound" min="0" max="1" value="1">
-                    <p>(켜기)</p>
-                </div>
-                <div class="ready_box">
-                    <p>휴식 시간 절반일 때 알림:</p><label>(끄기)
-                    <input type="range" id="readySound" min="0" max="1" value="1">
-                    (켜기)</label>
-                </div>
-            </div>
-            <button class="save_button" id="save_button" onclick="SaveSettings()">저장</button>
-        </aside>
+<body>
+    <div class="loading" id="loading">
+        <div class="load_per" id="load_per">로딩중</div>
+    </div>
 
-        <main>
-            <div class="condition">
-                <h2 id="condition">로딩 중...</h2>
+    <header>
+        <h1 class="title">운동 타이머</h1>
+        <button class="settings" id="settings"><h2>≡</h2></button>
+    </header>
+    
+    <aside class="settingsMenu" id="settingsMenu">
+        <button class="close" id="close">X</button>
+        <h2>설정</h2>
+
+        <div class="work">
+            <p>운동 시간:</p>
+            <input type="number" id="workMin">
+            <p>분</p>
+            <input type="number" id="workSec">
+            <p>초</p>
+        </div>
+
+        <div class="rest">
+            <p>휴식 시간:</p>
+            <input type="number" id="restMin">
+            <p>분</p>
+            <input type="number" id="restSec">
+            <p>초</p>
+        </div>
+
+        <div class="sets">
+            <label for="sets">세트 수:</label>
+            <input type="number" id="sets">
+            <label for="UnLimitRoop">무한 반복 하기</label>
+            <input type="checkbox" id="UnLimitRoop">
+        </div>
+
+        <div class="alert_sounds">
+            <div class="start_box">
+                <label>시작할 때 알림:</label>
+                <input type="range" id="startSound" min="0" max="1">
             </div>
-            <div class="timer">
-                <h2 id="minute">00</h2>
-                <h2>:</h2>
-                <h2 id="second">00</h2>
+
+            <div class="ready_box">
+                <p>휴식 종료 전 알림:</p>
+                <label><input type="number" id="readySec">초 전 알림</label>
+                <input type="range" id="readySound" min="0" max="1">
             </div>
-            <div class="buttons">
-                <button class="start" id="start" onclick="StartTimer()">시작</button>
-                <button class="stop" id="stop" onclick="StopTimer()">정지</button>
-                <button class="reset" id="reset" onclick="ResetTimer()">초기화</button>
-            </div>
-        </main>
-        <script type="module">
-          // Import the functions you need from the SDKs you need
-          import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
-          import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-analytics.js";
-          // TODO: Add SDKs for Firebase products that you want to use
-          // https://firebase.google.com/docs/web/setup#available-libraries
-        
-          // Your web app's Firebase configuration
-          // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-          const firebaseConfig = {
-            apiKey: "AIzaSyAxu3wJfb5FrtIAc4mj83hYYuj_9wjGTwM",
-            authDomain: "exercise-timer-70ead.firebaseapp.com",
-            projectId: "exercise-timer-70ead",
-            storageBucket: "exercise-timer-70ead.firebasestorage.app",
-            messagingSenderId: "763351366530",
-            appId: "1:763351366530:web:74045af7f2349567ad2d9b",
-            measurementId: "G-HZ257SR20L"
-          };
-        
-          // Initialize Firebase
-          const app = initializeApp(firebaseConfig);
-          const analytics = getAnalytics(app);
-        </script>
-        <script src="./load.js"></script>
-        <script src="./util.js"></script>
-        <script src="./script.js"></script>
-    </body>
+        </div>
+
+        <button id="save_button">저장</button>
+    </aside>
+
+    <main>
+        <h2 id="condition">로딩 중...</h2>
+        <div class="timer">
+            <h2 id="minute">00</h2>
+            <h2>:</h2>
+            <h2 id="second">00</h2>
+        </div>
+
+        <div class="buttons">
+            <button id="start">시작</button>
+            <button id="stop">정지</button>
+            <button id="reset">초기화</button>
+        </div>
+    </main>
+
+    <script src="./script.js"></script>
+</body>
 </html>
