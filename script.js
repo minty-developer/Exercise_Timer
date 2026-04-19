@@ -100,7 +100,7 @@ async function Load() {
 
     const interval = setInterval(() => {
         progress += 1;
-        t += 0.009;
+        t += 0.007;
 
         loading.style.backgroundColor = `rgba(255,255,255,${1 - t})`;
         loadper.innerText = `로딩 중... ${progress}%`;
@@ -431,4 +431,20 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("reset").addEventListener("click", ResetTimer);
 
     document.getElementById("UnLimitRoop").addEventListener("click", AlertULR);
+});
+
+// =========================
+// 화면을 나갈 시
+// =========================
+
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        if (isRunning) {
+            clearInterval(timer);
+            isRunning = false;
+            isPause = true;
+
+            document.getElementById("condition").textContent = "자동 일시정지";
+        }
+    }
 });
