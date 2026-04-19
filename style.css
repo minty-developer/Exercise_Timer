@@ -177,7 +177,17 @@ aside.open {
     width: 100px;
 }
 
+.evertime_before_start {
+    width: 100px;
+    text-align: right;
+}
+
 .start_box {
+    display: flex;
+    flex-direction: column;
+}
+
+.evertime_start_ready_box {
     display: flex;
     flex-direction: column;
 }
@@ -234,11 +244,14 @@ aside div {
         width: 50px;
     }
 
+    .evertime_before_start {
+        width: 50px;
+    }
+
     .before_start {
         width: 50px;
         text-align: right;
     }
-
 
     .buttons {
         display: flex;

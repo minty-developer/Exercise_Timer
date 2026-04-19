@@ -1,62 +1,108 @@
 // =========================
-// 🔥 상태 변수
+// 🔥 [1] 실행 상태 (Runtime State)
 // =========================
-let timer = null;
-let isRunning = false;
-let isWorkTime = true;
-let isPause = false;
-let isUnLimit = 0;
-let isStart = false;
-let startSoundOn = true;
-let readySoundOn = true;
+// 타이머 동작 상태 관리
+let timer = null;          // 메인 타이머
+let readyInterval = null;  // 시작 전 카운트다운
 
-let halfAlertPlayed = false;
+let isRunning = false;     // 현재 실행 중 여부
+let isPause = false;       // 일시정지 상태
+let isStart = false;       // 한 번이라도 시작했는지
 
-let currentTime = 0;
+let isWorkTime = true;     // 운동 시간인지 여부
+let currentTime = 0;       // 현재 남은 시간 (초)
 
-let totalSets = 3;
-let currentSet = 1;
+let currentSet = 1;        // 현재 세트 번호
 
-let workTime = 30;
-let restTime = 10;
+// =========================
+// 🔥 [2] 사용자 설정 값 (Config)
+// =========================
+// localStorage 및 UI에서 불러오는 값들
+let isUnLimit = 0;         // 무한 반복 여부 (1: 무한)
+let totalSets = 3;         // 총 세트 수
 
-let readySec = 3;
-let startReadySec = 3;
+let workTime = 30;         // 운동 시간 (초)
+let restTime = 10;         // 휴식 시간 (초)
 
-const ctx = new AudioContext();
+let readySec = 3;          // 휴식 종료 전 알림 시간
+let startReadySec = 3;     // 시작 전 대기 시간
+
+let everyTimeSoundOn = false;  // 매 전환 알림 ON/OFF
+let everyTimeReadySec = 0;     // 매 전환 알림 타이밍
+
+let startSoundOn = true;   // 시작 시 알림 ON/OFF
+let readySoundOn = true;   // 휴식 종료 알림 ON/OFF
+
+// =========================
+// 🔥 [3] 내부 제어 플래그 (Control Flags)
+// =========================
+// 이벤트 중복 실행 방지용
+let readyPlayed = false;   // readySec 알림 중복 방지
+let halfAlertPlayed = false; // (현재 미사용 or 확장용)
+
+// =========================
+// 🔥 [4] 오디오 관련
+// =========================
+let ctx = null;  // AudioContext (lazy init)
+
+
+// 브라우저 정책 대응: 사용자 인터랙션 이후 생성
+function getAudioCtx() {
+    if (!ctx) {
+        ctx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    return ctx;
+}
+
+// =========================
+// 🔥 [5] 유틸 함수
+// =========================
+
+// 숫자 안전 처리 함수
+// - NaN 방지
+// - 최소/최대 범위 제한
+function safeNum(v, min = 0, max = 9999) {
+    v = parseInt(v);
+    if (isNaN(v)) return min;
+    return Math.min(Math.max(v, min), max);
+}
 
 // =========================
 // 🔊 알림음
 // =========================
 function PlaySound() {
-    const osc = ctx.createOscillator();
+    const audioCtx = getAudioCtx();
+    const osc = audioCtx.createOscillator();
+
     osc.type = "sine";       // 부드러운 삐 소리
     osc.frequency.value = 1000; // 1000Hz = 전형적인 삐 소리
 
-    osc.connect(ctx.destination);
+    osc.connect(audioCtx.destination);
     osc.start();
 
     // 2초 뒤 종료 (길이 조절 가능)
     setTimeout(() => {
     osc.stop();
-    }, 200);
+    }, 120);
 }
 
 // =========================
 // 🔊 알림음
 // =========================
 function PlaySoundBee() {
-    const osc = ctx.createOscillator();
+    const audioCtx = getAudioCtx();
+    const osc = audioCtx.createOscillator();
+
     osc.type = "sine";       // 부드러운 삐 소리
     osc.frequency.value = 1000; // 1000Hz = 전형적인 삐 소리
 
-    osc.connect(ctx.destination);
+    osc.connect(audioCtx.destination);
     osc.start();
 
     // 2초 뒤 종료 (길이 조절 가능)
     setTimeout(() => {
     osc.stop();
-    }, 1000);
+    }, 500);
 }
 
 // =========================
@@ -80,8 +126,8 @@ function IsChanged() {
 
         const saved = localStorage.getItem(key);
 
-        if (saved === null) return true;
-        if (current != saved) return true;
+        if (saved === null) continue;
+        if (String(current) !== String(saved)) return true;
     }
     return false;
 }
@@ -127,20 +173,23 @@ function UpdateDisplay() {
 // 설정 불러오기
 // =========================
 function LoadSettings() {
-    const workMin = parseInt(document.getElementById("workMin").value) || 0;
-    const workSec = parseInt(document.getElementById("workSec").value) || 0;
-    const restMin = parseInt(document.getElementById("restMin").value) || 0;
-    const restSec = parseInt(document.getElementById("restSec").value) || 0;
+    const workMin = safeNum(parseInt(document.getElementById("workMin").value));
+    const workSec = safeNum(parseInt(document.getElementById("workSec").value, 0, 59));
+    const restMin = safeNum(parseInt(document.getElementById("restMin").value));
+    const restSec = safeNum(parseInt(document.getElementById("restSec").value, 0, 59));
 
     isUnLimit = document.getElementById("UnLimitRoop").checked ? 1 : 0;
     totalSets = parseInt(document.getElementById("sets").value) || 1;
 
-    startSoundOn = document.getElementById("startSound").value == "1";
-    readySoundOn = document.getElementById("readySound").value == "1";
+    startSoundOn = document.getElementById("startSound").checked;
+    readySoundOn = document.getElementById("readySound").checked;
 
     // 🔥 추가
     readySec = parseInt(document.getElementById("readySec").value) || 0;
     startReadySec = parseInt(document.getElementById("start_readySec").value) || 0;
+
+    everyTimeSoundOn = document.getElementById("evertime_startSound").value == "1";
+    everyTimeReadySec = parseInt(document.getElementById("evertime_start_readySec").value) || 0;
 
     workTime = workMin * 60 + workSec;
     restTime = restMin * 60 + restSec;
@@ -172,18 +221,35 @@ function runTimer() {
     isRunning = true;
     isStart = true;
 
+    if (timer) clearInterval(timer);
+    timer = null;
+
     timer = setInterval(() => {
-        currentTime--;
+        currentTime = Math.max(0, currentTime - 1);
+        
+
+        // 🔥 매 전환 전 카운트다운 알림
+        if (
+            everyTimeSoundOn &&
+            everyTimeReadySec > 0 &&
+            currentTime <= everyTimeReadySec &&
+            currentTime > 0 &&
+            !( !isWorkTime && currentTime === readySec )
+        ) {
+            PlaySound();
+        }
 
         // 🔥 휴식 종료 n초 전 알림
         if (!isWorkTime && readySoundOn) {
-            if (currentTime === readySec) {
+            if (currentTime === readySec && !readyPlayed) {
                 PlaySound();
+                readyPlayed = true;
             }
         }
 
         if (currentTime <= 0) {
             halfAlertPlayed = false;
+            readyPlayed = false;
 
             if (isWorkTime) {
                 isWorkTime = false;
@@ -193,6 +259,7 @@ function runTimer() {
 
                 if (currentSet > totalSets) {
                     clearInterval(timer);
+                    timer = null;
                     isRunning = false;
 
                     document.getElementById("condition").textContent = "운동 완료!";
@@ -229,23 +296,28 @@ function runTimer() {
 // 타이머 시작
 // =========================
 function StartTimer() {
-    if (isRunning) return;
+    if (isRunning || readyInterval) return;
+
+    if (readyInterval !== null) {
+        clearInterval(readyInterval);
+        readyInterval = null;
+    }
 
     LoadSettings();
 
-    if (currentTime === 0) {
+    if (!isStart) {
         isWorkTime = true;
         currentSet = 1;
         currentTime = workTime; // 🔥 핵심
     }
 
     // 시작 전 대기
-    if (startReadySec > 0 && currentTime === workTime) {
+    if (startReadySec > 0 && !isStart) {
         let countdown = startReadySec;
 
         document.getElementById("condition").textContent = "운동 준비";
 
-        const readyInterval = setInterval(() => {
+        readyInterval = setInterval(() => {
             document.getElementById("minute").textContent = "00";
             document.getElementById("second").textContent = String(countdown).padStart(2, '0');
 
@@ -274,9 +346,15 @@ function StartTimer() {
 function StopTimer() {
     const stopBtn = document.getElementById("stop");
 
+    if (readyInterval) {
+        clearInterval(readyInterval);
+        readyInterval = null;
+    }
+
     if (isStart) {
         if (isRunning) {
             clearInterval(timer);
+            timer = null;
             isRunning = false;
             isPause = true;
 
@@ -284,7 +362,7 @@ function StopTimer() {
             stopBtn.textContent = "재개";
         } else {
             isPause = false;
-            StartTimer();
+            runTimer();
             stopBtn.textContent = "정지";
         }
     }
@@ -295,12 +373,18 @@ function StopTimer() {
 // =========================
 function ResetTimer() {
     clearInterval(timer);
+    timer = null;
     isRunning = false;
     isPause = false;
     isWorkTime = true;
     isStart = false;
     currentTime = 0;
     currentSet = 1;
+
+    if (readyInterval) {
+        clearInterval(readyInterval);
+        readyInterval = null;
+    }
 
     document.getElementById("stop").textContent = "정지";
 
@@ -336,6 +420,8 @@ function SaveSettings() {
     localStorage.setItem("readySound", document.getElementById("readySound").value);
     localStorage.setItem("readySec", document.getElementById("readySec").value);
     localStorage.setItem("start_readySec", document.getElementById("start_readySec").value);
+    localStorage.setItem("evertime_startSound", document.getElementById("evertime_startSound").value);
+    localStorage.setItem("evertime_start_readySec", document.getElementById("evertime_start_readySec").value);
 
     alert("설정이 저장되었습니다.");
 
@@ -359,6 +445,7 @@ function Init() {
         startSound: 1,
         readySound: 1,
         readySec: 3,
+        start_readySec: 0,
     };
 
     for (let key in defaults) {
@@ -378,10 +465,11 @@ function Init() {
     document.getElementById("startSound").value = localStorage.getItem("startSound");
     document.getElementById("readySound").value = localStorage.getItem("readySound");
     document.getElementById("readySec").value = localStorage.getItem("readySec");
-    document.getElementById("readySec").value = localStorage.getItem("readySec");
-    document.getElementById("start_readySec").value = localStorage.getItem("start_readySec");
+    document.getElementById("start_readySec").value = localStorage.getItem("start_readySec") || 0;
     document.getElementById("UnLimitRoop").checked = !!Unlimit;
     document.getElementById("sets").disabled = !!Unlimit;
+    document.getElementById("evertime_startSound").value = localStorage.getItem("evertime_startSound") || "0";
+    document.getElementById("evertime_start_readySec").value = localStorage.getItem("evertime_start_readySec") || "0";
 }
 
 // =========================
@@ -438,13 +526,23 @@ document.addEventListener("DOMContentLoaded", () => {
 // =========================
 
 document.addEventListener("visibilitychange", () => {
+    if (readyInterval) {
+        clearInterval(readyInterval);
+        readyInterval = null;
+    }
+
     if (document.hidden) {
         if (isRunning) {
             clearInterval(timer);
+            timer = null;
             isRunning = false;
             isPause = true;
 
             document.getElementById("condition").textContent = "자동 일시정지";
+        }
+    } else {
+        if (isPause) {
+            document.getElementById("condition").textContent = "일시정지 상태";
         }
     }
 });
