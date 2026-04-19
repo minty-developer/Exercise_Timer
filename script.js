@@ -23,12 +23,40 @@ let restTime = 10;
 let readySec = 3;
 let startReadySec = 3;
 
+const ctx = new AudioContext();
+
 // =========================
 // 🔊 알림음
 // =========================
 function PlaySound() {
-    const audio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
-    audio.play();
+    const osc = ctx.createOscillator();
+    osc.type = "sine";       // 부드러운 삐 소리
+    osc.frequency.value = 1000; // 1000Hz = 전형적인 삐 소리
+
+    osc.connect(ctx.destination);
+    osc.start();
+
+    // 2초 뒤 종료 (길이 조절 가능)
+    setTimeout(() => {
+    osc.stop();
+    }, 200);
+}
+
+// =========================
+// 🔊 알림음
+// =========================
+function PlaySoundBee() {
+    const osc = ctx.createOscillator();
+    osc.type = "sine";       // 부드러운 삐 소리
+    osc.frequency.value = 1000; // 1000Hz = 전형적인 삐 소리
+
+    osc.connect(ctx.destination);
+    osc.start();
+
+    // 2초 뒤 종료 (길이 조절 가능)
+    setTimeout(() => {
+    osc.stop();
+    }, 1000);
 }
 
 // =========================
@@ -215,14 +243,17 @@ function StartTimer() {
     if (startReadySec > 0 && currentTime === workTime) {
         let countdown = startReadySec;
 
-        document.getElementById("condition").textContent = "준비";
+        document.getElementById("condition").textContent = "운동 준비";
 
         const readyInterval = setInterval(() => {
             document.getElementById("minute").textContent = "00";
             document.getElementById("second").textContent = String(countdown).padStart(2, '0');
 
-            if (startSoundOn) PlaySound();
-
+            if (startSoundOn && countdown === 0) {
+                PlaySoundBee();
+            } else if (startSoundOn) {
+                PlaySound();
+            }
             countdown--;
 
             if (countdown < 0) {

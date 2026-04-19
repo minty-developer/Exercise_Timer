@@ -136,6 +136,7 @@ aside.open {
 
 .work {
     display: inline-flex;
+    border-top: 3px solid black;
 }
 
 .rest {
@@ -144,6 +145,17 @@ aside.open {
 
 .time {
     width: 100px;
+    text-align: right;
+}
+
+.ready {
+    width: 100px;
+    text-align: right;
+}
+
+.sets_input {
+    width: 100px;
+    text-align: right;
 }
 
 .alert_sounds {
@@ -161,6 +173,23 @@ aside.open {
     flex-direction: column;
 }
 
+.before_start {
+    width: 100px;
+}
+
+.start_box {
+    display: flex;
+    flex-direction: column;
+}
+
+.bar {
+    width: 40px;
+}
+
+aside div {
+    border-bottom: 1px solid black;
+}
+
 @media screen and (max-width:766px) {
     .title {
         font-size: 32px;
@@ -175,7 +204,41 @@ aside.open {
     aside {
         width: 100vw;
         gap: 30px;
+        height: 100vh;
     }
+
+    .work {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .rest {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sets {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .time {
+        width: 50px;
+    }
+
+    .sets_input {
+        width: 50px;
+    }
+
+    .ready {
+        width: 50px;
+    }
+
+    .before_start {
+        width: 50px;
+        text-align: right;
+    }
+
 
     .buttons {
         display: flex;
