@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>식단 관리 | 운동 타이머</title>
+</head>
+<body class="diet_page">
+    <header>
+        <a class="back_link" href="./timer.html">← 타이머</a>
+        <h1 class="diet_title">식단 관리</h1>
+    </header>
+
+    <main class="diet_main">
+        <section class="diet_intro">
+            <p class="loading_eyebrow">DAILY NUTRITION</p>
+            <h2>오늘 먹은 것을<br><span>가볍게 기록하세요</span></h2>
+            <p>식사와 영양 정보를 저장하고 하루의 흐름을 확인할 수 있습니다.</p>
+        </section>
+
+        <section class="meal_form_section">
+            <form id="meal_form" class="meal_form">
+                <label>식사 <select id="meal_type" required>
+                    <option value="아침">아침</option>
+                    <option value="점심">점심</option>
+                    <option value="저녁">저녁</option>
+                    <option value="간식">간식</option>
+                </select></label>
+                <label>메뉴 <input id="meal_name" type="text" placeholder="예: 닭가슴살 샐러드" maxlength="100" required></label>
+                <label>칼로리 <input id="calories" type="number" min="0" max="99999" placeholder="kcal"></label>
+                <button class="outline_button" type="submit">식단 추가</button>
+            </form>
+            <p id="meal_status" class="meal_status" aria-live="polite"></p>
+        </section>
+
+        <section class="meal_list_section">
+            <div class="section_heading"><h2>오늘의 기록</h2><strong id="total_calories">0 kcal</strong></div>
+            <div id="meal_list" class="meal_list"><p class="empty_meals">기록을 불러오는 중...</p></div>
+        </section>
+    </main>
+    <script src="./diet.js"></script>
+</body>
+</html>

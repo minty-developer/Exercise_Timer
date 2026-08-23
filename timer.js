@@ -67,6 +67,11 @@ function safeNum(v, min = 0, max = 9999) {
     return Math.min(Math.max(v, min), max);
 }
 
+function storedNumber(key, fallback) {
+    const value = Number(localStorage.getItem(key));
+    return Number.isFinite(value) ? value : fallback;
+}
+
 // =========================
 // 🔊 알림음
 // =========================
@@ -130,32 +135,6 @@ function IsChanged() {
         if (String(current) !== String(saved)) return true;
     }
     return false;
-}
-
-// =========================
-// 로드 함수
-// =========================
-async function Load() {
-    const loading = document.getElementById("loading");
-    const loadper = document.getElementById("load_per");
-
-    loading.style.display = "block";
-
-    let progress = 0;
-    let t = 0;
-
-    const interval = setInterval(() => {
-        progress += 1;
-        t += 0.007;
-
-        loading.style.backgroundColor = `rgba(255,255,255,${1 - t})`;
-        loadper.innerText = `로딩 중... ${progress}%`;
-
-        if (progress >= 100) {
-            clearInterval(interval);
-            loading.style.display = "none";
-        }
-    }, 50);
 }
 
 // =========================
@@ -435,49 +414,49 @@ function SaveSettings() {
 // 초기화
 // =========================
 function Init() {
-    const defaults = {
-        workMin: 1,
-        workSec: 0,
-        restMin: 0,
-        restSec: 30,
-        sets: 5,
-        UnLimit: 1,
-        startSound: 1,
-        readySound: 1,
-        readySec: 3,
-        start_readySec: 0,
+    const settings = {
+        workMin: storedNumber("workMin", 1),
+        workSec: storedNumber("workSec", 0),
+        restMin: storedNumber("restMin", 0),
+        restSec: storedNumber("restSec", 30),
+        sets: storedNumber("sets", 5),
+        UnLimit: storedNumber("UnLimit", 1),
+        startSound: storedNumber("startSound", 1),
+        readySound: storedNumber("readySound", 1),
+        readySec: storedNumber("readySec", 3),
+        start_readySec: storedNumber("start_readySec", 0),
+        evertime_startSound: storedNumber("evertime_startSound", 0),
+        evertime_start_readySec: storedNumber("evertime_start_readySec", 0),
     };
 
-    for (let key in defaults) {
-        if (localStorage.getItem(key) === null) {
-            localStorage.setItem(key, defaults[key]);
-        }
-    }
+    Object.entries(settings).forEach(([key, value]) => {
+        localStorage.setItem(key, String(value));
+    });
 
-    const Unlimit = parseInt(localStorage.getItem("UnLimit"));
+    const Unlimit = settings.UnLimit;
 
-    document.getElementById("workMin").value = localStorage.getItem("workMin");
-    document.getElementById("workSec").value = localStorage.getItem("workSec");
-    document.getElementById("restMin").value = localStorage.getItem("restMin");
-    document.getElementById("restSec").value = localStorage.getItem("restSec");
-    document.getElementById("sets").value = localStorage.getItem("sets");
+    document.getElementById("workMin").value = settings.workMin;
+    document.getElementById("workSec").value = settings.workSec;
+    document.getElementById("restMin").value = settings.restMin;
+    document.getElementById("restSec").value = settings.restSec;
+    document.getElementById("sets").value = settings.sets;
 
-    document.getElementById("startSound").value = localStorage.getItem("startSound");
-    document.getElementById("readySound").value = localStorage.getItem("readySound");
-    document.getElementById("readySec").value = localStorage.getItem("readySec");
-    document.getElementById("start_readySec").value = localStorage.getItem("start_readySec") || 0;
+    document.getElementById("startSound").value = settings.startSound;
+    document.getElementById("readySound").value = settings.readySound;
+    document.getElementById("readySec").value = settings.readySec;
+    document.getElementById("start_readySec").value = settings.start_readySec;
     document.getElementById("UnLimitRoop").checked = !!Unlimit;
     document.getElementById("sets").disabled = !!Unlimit;
-    document.getElementById("evertime_startSound").value = localStorage.getItem("evertime_startSound") || "0";
-    document.getElementById("evertime_start_readySec").value = localStorage.getItem("evertime_start_readySec") || "0";
+    document.getElementById("evertime_startSound").value = settings.evertime_startSound;
+    document.getElementById("evertime_start_readySec").value = settings.evertime_start_readySec;
 }
 
 // =========================
 // 화면 초기화
 // =========================
 function ScreenInit() {
-    const workMin = parseInt(localStorage.getItem("workMin"));
-    const workSec = parseInt(localStorage.getItem("workSec"));
+    const workMin = storedNumber("workMin", 1);
+    const workSec = storedNumber("workSec", 0);
 
     document.getElementById("condition").innerText = "준비 중...";
     document.getElementById("minute").innerText = String(workMin).padStart(2, '0');
@@ -508,7 +487,6 @@ function AlertULR() {
 document.addEventListener("DOMContentLoaded", () => {
     Init();
     ScreenInit();
-    Load();
 
     document.getElementById("settings").addEventListener("click", OpenSettings);
     document.getElementById("close").addEventListener("click", CloseSettings);

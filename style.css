@@ -9,6 +9,16 @@ body {
     position: fixed;
     width: 100vw;
     height: 100vh;
+    background: #f4f7f2;
+    color: #183028;
+    font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+button {
+    border: 1px solid currentColor;
+    background: transparent;
+    color: inherit;
+    font: inherit;
 }
 
 .title {
@@ -19,25 +29,351 @@ body {
     top: 20px;
 }
 
+.diet_page {
+    position: static;
+    min-height: 100vh;
+    overflow-y: auto;
+}
+
+.diet_page header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: min(980px, calc(100vw - 44px));
+    height: 92px;
+    margin: 0 auto;
+}
+
+.back_link,
+.diet_link {
+    color: #2f7658;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.diet_link {
+    position: absolute;
+    right: 98px;
+    top: 40px;
+}
+
+.back_link:hover,
+.diet_link:hover {
+    color: #183028;
+}
+
+.diet_title {
+    margin-left: 34px;
+    color: #183028;
+    font-size: 18px;
+}
+
+.diet_main {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 56px;
+    width: min(980px, calc(100vw - 44px));
+    margin: 58px auto 80px;
+}
+
+.diet_intro h2 {
+    font-size: clamp(36px, 5vw, 58px);
+    line-height: 1.08;
+}
+
+.diet_intro h2 span {
+    color: #2f7658;
+}
+
+.diet_intro > p:last-child {
+    max-width: 330px;
+    margin-top: 20px;
+    color: #6c8175;
+    line-height: 1.6;
+}
+
+.meal_form_section,
+.meal_list_section {
+    padding: 24px;
+    border: 1px solid #dce6da;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.65);
+}
+
+.meal_form {
+    display: grid;
+    gap: 14px;
+}
+
+.meal_form label {
+    display: grid;
+    gap: 7px;
+    color: #426052;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.meal_form input,
+.meal_form select {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #c8d8c5;
+    border-radius: 8px;
+    background: white;
+    color: #183028;
+    font: inherit;
+}
+
+.meal_form input:focus,
+.meal_form select:focus {
+    outline: 3px solid rgba(47, 118, 88, 0.18);
+    border-color: #2f7658;
+}
+
+.outline_button {
+    width: 100%;
+    min-height: 44px;
+    margin-top: 4px;
+    border: 1px solid #2f7658;
+    border-radius: 8px;
+    color: #2f7658;
+    cursor: pointer;
+}
+
+.outline_button:hover {
+    border-color: #245d45;
+    color: #245d45;
+}
+
+.meal_status {
+    min-height: 18px;
+    margin-top: 12px;
+    color: #2f7658;
+    font-size: 13px;
+}
+
+.meal_status.error {
+    color: #a04d42;
+}
+
+.meal_list_section {
+    grid-column: 2;
+}
+
+.section_heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #dce6da;
+}
+
+.section_heading h2 {
+    font-size: 20px;
+}
+
+.section_heading strong {
+    color: #2f7658;
+    font-size: 14px;
+}
+
+.meal_list {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.meal_item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 14px 0;
+    border-bottom: 1px solid #edf1ea;
+}
+
+.meal_item h3 {
+    margin-top: 5px;
+    font-size: 16px;
+    font-weight: normal;
+}
+
+.meal_type {
+    color: #79927f;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.meal_meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    white-space: nowrap;
+}
+
+.meal_meta strong {
+    color: #426052;
+    font-size: 13px;
+}
+
+.delete_meal {
+    padding: 4px 0;
+    border: 0;
+    border-bottom: 1px solid #b5c9bd;
+    color: #79927f;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.delete_meal:hover {
+    border-color: #a04d42;
+    color: #a04d42;
+}
+
+.empty_meals {
+    padding: 22px 0 8px;
+    color: #79927f;
+    font-size: 14px;
+}
+
 .loading {
     position: fixed;
     top: 0;
     left: 0;
-    width: 98vw;
-    height: 98vh;
-
-    background-color: rgba(255, 255, 255, 0.95);
-
+    display: grid;
+    place-items: center;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #17382f;
+    color: #f7f8ef;
     z-index: 9999;
 }
 
-.load_per {
+.loading::before,
+.loading::after {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    content: "";
+    border: 1px solid rgba(211, 231, 187, 0.2);
+    border-radius: 50%;
+}
 
-    transform: translate(-50%, -50%);
-    font-size: 24px;
+.loading::before {
+    width: 520px;
+    height: 520px;
+    right: -220px;
+    top: -180px;
+}
+
+.loading::after {
+    width: 360px;
+    height: 360px;
+    left: -190px;
+    bottom: -160px;
+}
+
+.loading_panel {
+    position: relative;
+    width: min(520px, calc(100vw - 44px));
+    z-index: 1;
+    animation: loading_enter 0.7s ease both;
+}
+
+.loading_eyebrow {
+    margin-bottom: 34px;
+    color: #b9d98f;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 3px;
+}
+
+.loading h1 {
+    font-size: clamp(38px, 7vw, 64px);
+    line-height: 1.08;
+    letter-spacing: 0;
+}
+
+.loading h1 span {
+    color: #cbe8a4;
+}
+
+.loading_description {
+    margin-top: 18px;
+    color: #b5c9bd;
+    font-size: 15px;
+}
+
+.loading_status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 72px;
+    color: #f7f8ef;
+    font-size: 14px;
+}
+
+.status_dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #b9d98f;
+    box-shadow: 0 0 0 6px rgba(185, 217, 143, 0.12);
+    animation: status_pulse 1.4s ease infinite;
+}
+
+.loading_progress {
+    width: 100%;
+    height: 5px;
+    margin-top: 16px;
+    overflow: hidden;
+    border-radius: 5px;
+    background: rgba(247, 248, 239, 0.16);
+}
+
+.loading_progress span {
+    display: block;
+    width: 12%;
+    height: 100%;
+    border-radius: inherit;
+    background: #cbe8a4;
+    transition: width 0.2s ease;
+}
+
+.loading_detail {
+    margin-top: 12px;
+    color: #87a99a;
+    font-size: 12px;
+}
+
+.loading_features {
+    display: flex;
+    gap: 10px;
+    margin-top: 64px;
+    color: #6f9483;
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+.loading_features span + span::before {
+    margin-right: 10px;
+    content: "/";
+    color: #486d5c;
+}
+
+@keyframes loading_enter {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes status_pulse {
+    50% { opacity: 0.45; transform: scale(0.8); }
+}
+
+.load_per {
+    font-size: inherit;
 }
 
 header {
@@ -60,26 +396,36 @@ main {
     gap: 20px;
 }
 
+main.loading {
+    position: fixed;
+    top: 0;
+    display: grid;
+    align-items: initial;
+    width: 100vw;
+    height: 100vh;
+    gap: 0;
+}
+
 .timer {
     display: inline-flex;
     align-items: center;
 }
 
 aside {
-    width: 90vw;
-    height: 98vh;
+    width: min(420px, 92vw);
+    height: 100vh;
     position: fixed;
     top: 0;
     right: 0;
-    background-color: #f0f0f0;
-    padding: 20px;
-    /* 🔥 추가 */
-    transform: translateX(100%);   /* 화면 밖으로 */
+    overflow-y: auto;
+    background: #fbfcf8;
+    padding: 32px 28px 104px;
+    box-shadow: -18px 0 45px rgba(24, 48, 40, 0.18);
+    transform: translateX(105%);
     transition: transform 0.3s ease;
     z-index: 999;
 }
 
-/* 열렸을 때 */
 aside.open {
     transform: translateX(0);
 }
@@ -87,9 +433,15 @@ aside.open {
 .settingsMenu {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    border-bottom-left-radius: 10px;
-    border-top-left-radius: 10px;
+    gap: 14px;
+    border-radius: 18px 0 0 18px;
+}
+
+.settingsMenu > h2 {
+    margin: 8px 0 10px;
+    color: #183028;
+    font-size: 28px;
+    letter-spacing: 0;
 }
 
 .close, .settings {
@@ -99,48 +451,127 @@ aside.open {
     width: 46px;
     height: 46px;
     cursor: pointer;
-    border: none;
-    background: green;
+    border: 1px solid #2f7658;
+    background: transparent;
     color: white;
     border-radius: 5px;
     font-size: 32px;
 }
 
 .close {
-    display: none;
+    display: block;
+    position: absolute;
+    top: 25px;
+    right: 24px;
+    width: 38px;
+    height: 38px;
+    background: transparent;
+    color: #183028;
+    border-radius: 50%;
+    font-size: 20px;
+    line-height: 1;
+}
+
+.close:hover {
+    background: transparent;
+    border-color: #245d45;
+    color: #245d45;
 }
 
 .buttons button {
     width: 120px;
     height: 40px;
-    border: none;
-    background: yellowgreen;
-    color: white;
+    border: 1px solid #2f7658;
+    background: transparent;
+    color: #2f7658;
     border-radius: 5px;
     cursor: pointer;
 }
 
 .buttons button:hover {
-    background: green;
+    background: transparent;
+    border-color: #245d45;
+    color: #245d45;
 }
 
 .save_button {
-    width: 80px;
-    height: 30px;
-    border: none;
-    background: blue;
-    color: white;
-    border-radius: 5px;
+    position: fixed;
+    right: 28px;
+    bottom: 24px;
+    width: min(364px, calc(92vw - 56px));
+    height: 48px;
+    border: 1px solid #2f7658;
+    background: transparent;
+    color: #2f7658;
+    border-radius: 10px;
     cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 8px 18px rgba(47, 118, 88, 0.22);
+}
+
+.save_button:hover {
+    background: transparent;
+    border-color: #245d45;
+    color: #245d45;
 }
 
 .work {
-    display: inline-flex;
-    border-top: 3px solid black;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .rest {
-    display: inline-flex;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.settingsMenu > div {
+    padding: 18px 0;
+    border-top: 1px solid #dce6da;
+}
+
+.settingsMenu p {
+    margin-bottom: 10px;
+    color: #426052;
+    font-size: 14px;
+}
+
+.time_label,
+.sets label,
+.alert_sounds label {
+    color: #39574a;
+    font-size: 14px;
+}
+
+.time_label + .time_label {
+    margin-left: 8px;
+}
+
+.time,
+.ready,
+.sets_input,
+.before_start,
+.evertime_before_start {
+    height: 38px;
+    padding: 0 10px;
+    border: 1px solid #c8d8c5;
+    border-radius: 8px;
+    background: white;
+    color: #183028;
+    font: inherit;
+    text-align: right;
+}
+
+.time:focus,
+.ready:focus,
+.sets_input:focus,
+.before_start:focus,
+.evertime_before_start:focus {
+    outline: 3px solid rgba(47, 118, 88, 0.18);
+    border-color: #2f7658;
 }
 
 .time {
@@ -161,16 +592,19 @@ aside.open {
 .alert_sounds {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0;
 }
 
 .start_box {
-    display: inline-flex;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .ready_box {
     display: flex;
     flex-direction: column;
+    gap: 8px;
 }
 
 .before_start {
@@ -183,21 +617,25 @@ aside.open {
 }
 
 .start_box {
-    display: flex;
-    flex-direction: column;
+    padding-top: 14px;
 }
 
 .evertime_start_ready_box {
     display: flex;
     flex-direction: column;
+    gap: 8px;
 }
 
 .bar {
-    width: 40px;
+    width: 100px;
+    accent-color: #2f7658;
+    vertical-align: middle;
 }
 
-aside div {
-    border-bottom: 1px solid black;
+.sets {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 @media screen and (max-width:766px) {
@@ -213,23 +651,8 @@ aside div {
 
     aside {
         width: 100vw;
-        gap: 30px;
         height: 100vh;
-    }
-
-    .work {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .rest {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .sets {
-        display: flex;
-        flex-direction: column;
+        padding: 28px 22px 96px;
     }
 
     .time {
@@ -266,21 +689,50 @@ aside div {
         height: 50px;
     }
     .buttons button:hover {
-        background: yellowgreen;
+        background: transparent;
+        color: #2f7658;
     }
-    
+
+    .save_button {
+        right: 22px;
+        width: calc(100vw - 44px);
+    }
+
+    .diet_page header {
+        width: calc(100vw - 32px);
+    }
+
+    .diet_title {
+        margin-left: 22px;
+    }
+
+    .diet_link {
+        right: 0;
+        top: 40px;
+    }
+
+    .diet_main {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+        width: calc(100vw - 32px);
+        margin-top: 34px;
+    }
+
+    .meal_list_section {
+        order: 3;
+    }
+
+    .meal_form_section,
+    .meal_list_section {
+        padding: 18px;
+    }
+
+    .meal_item {
+        align-items: flex-start;
+    }
+
     main {
         min-height: calc(100vh - 100px);
-    }
-
-    .ready_box {
-        display:flex;
-        flex-direction: column;
-    }
-}
-
-@media screen and (min-width:1024px) {
-    .loading {
-        width: 100vw;
     }
 }

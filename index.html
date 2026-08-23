@@ -3,87 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>운동 타이머 | 준비 중</title>
     <link rel="stylesheet" href="./style.css">
-    <title>운동용 타이머</title>
 </head>
 <body>
-    <div class="loading" id="loading">
-        <div class="load_per" id="load_per">로딩중</div>
-    </div>
+    <main class="loading" id="loading">
+        <div class="loading_panel">
+            <p class="loading_eyebrow">EXERCISE TIMER</p>
+            <h1>오늘의 운동을<br><span>준비하고 있어요</span></h1>
+            <p class="loading_description">설정과 타이머 화면을 불러오는 중입니다.</p>
 
-    <header>
-        <h1 class="title">운동 타이머</h1>
-        <button class="settings" id="settings"><h2>≡</h2></button>
-    </header>
-    
-    <aside class="settingsMenu" id="settingsMenu">
-        <button class="close" id="close">X</button>
-        <h2>설정</h2>
-
-        <div class="work">
-            <p><strong>운동 시간:</strong></p>
-            <div>
-                <label class="time_label"><input type="number" id="workMin" class="time">분</label>
-                <label class="time_label"><input type="number" id="workSec" class="time">초</label>
+            <div class="loading_status" aria-live="polite">
+                <span class="status_dot"></span>
+                <span id="load_per">서버에 연결하는 중...</span>
             </div>
-        </div>
-
-        <div class="rest">
-            <p><strong>휴식 시간:</strong></p>
-            <div>
-                <label class="time_label"><input type="number" id="restMin" class="time">분</label>
-                <label class="time_label"><input type="number" id="restSec" class="time">초</label>
+            <div class="loading_progress" role="progressbar" aria-label="로딩 진행률" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <span id="loading_progress_bar"></span>
             </div>
-        </div>
+            <p class="loading_detail" id="loading_detail">Render 서버가 깨어나는 데 잠시 걸릴 수 있어요.</p>
 
-        <div class="sets">
-            <p><strong>세트 수: </strong></p>
-            <label><input type="number" id="sets" class="sets_input">회</label>
-            <label><input type="checkbox" id="UnLimitRoop"> 무한 반복 하기</label>
-        </div>
-
-        <div class="alert_sounds">
-            <div class="start_ready_box">
-                <p><strong>시작 전 알림: </strong></p>
-                <label><input type="number" class="before_start" id="start_readySec">초 전 알림</label>
+            <div class="loading_features">
+                <span>WORK</span>
+                <span>REST</span>
+                <span>REPEAT</span>
             </div>
-
-            <div class="evertime_start_ready_box">
-                <p><strong>매 시간 시작 전 알림: </strong></p>
-                <label>(끄기)<input class="bar" type="range" id="evertime_startSound" min="0" max="1">(켜기)</label>
-                <label><input type="number" class="evertime_before_start" id="evertime_start_readySec">초 전 알림</label>
-            </div>
-
-            <div class="start_box">
-                <p><strong>시작할 때 알림: </strong></p>
-                <label>(끄기)<input class="bar" type="range" id="startSound" min="0" max="1">(켜기)</label>
-            </div>
-
-            <div class="ready_box">
-                <p><strong>휴식 종료 전 알림:</strong></p>
-                <label>(끄기)<input class="bar" type="range" id="readySound" min="0" max="1">(켜기)</label>
-                <label><input class="ready" type="number" id="readySec">초 전 알림</label>
-            </div>
-        </div>
-
-        <button class="save_button" id="save_button">저장</button>
-    </aside>
-
-    <main>
-        <h2 id="condition">로딩 중...</h2>
-        <div class="timer">
-            <h2 id="minute">00</h2>
-            <h2>:</h2>
-            <h2 id="second">00</h2>
-        </div>
-
-        <div class="buttons">
-            <button id="start">시작</button>
-            <button id="stop">정지</button>
-            <button id="reset">초기화</button>
         </div>
     </main>
-
-    <script src="./script.js"></script>
+    <script src="./index.js"></script>
 </body>
 </html>
