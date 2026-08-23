@@ -1,10 +1,16 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const dns = require("dns");
 const { Pool } = require("pg");
+
+dns.setDefaultResultOrder("ipv4first");
 
 const port = process.env.PORT || 3000;
 const root = __dirname;
+if (process.env.DATABASE_URL && process.env.DATABASE_URL.includes(".supabase.co")) {
+    console.warn("DATABASE_URL is using Supabase Direct connection. Use the Session Pooler URI in Render.");
+}
 const pool = process.env.DATABASE_URL
     ? new Pool({
         connectionString: process.env.DATABASE_URL,
